@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -62,6 +63,48 @@ void generateAndOutputNumbers(string day, int gameCount) {
     }
 }
 
+void calculateAndOutputPrice(int games, int weeks, bool twoDays) {
+    double gesamtpreis = ((games * weeks) * 1.2);
+
+    if((twoDays)) {
+        gesamtpreis *= 2;
+
+        if(weeks > 2) {
+            gesamtpreis += 1;
+        } else {
+            gesamtpreis += 0.75;
+        }
+    }
+    else if(weeks > 1) {
+        gesamtpreis += 0.75;
+    } else {
+        gesamtpreis += 0.5;
+    }
+
+    cout << setprecision(2);
+    cout << endl << "Gesamtpreis: " << gesamtpreis << "€" << endl;
+}
+
+void outputChosenOptions(int games, int weeks, bool wed, bool sat) {
+    outputDashedLine();
+    cout << "Gewählte Optionen:" << endl;
+    cout << "Spiele pro Spieltag: " << games << endl;
+    cout << "Anzahl Spielwochen:" << weeks << endl;
+    
+    cout << "Spieltage: ";
+    if(wed && sat) {
+        cout << "Mittwoch & Samstag";
+    }
+    else if(wed) {
+        cout << "Mittwoch";
+    }
+    else {
+        cout << "Samstag";
+    }
+    cout << endl;
+
+}
+
 int main() {
     string tage;
     int anzahlSpiele, anzahlWochen;
@@ -118,40 +161,9 @@ int main() {
             }
         }
 
-        outputDashedLine();
-        cout << "Gewählte Optionen:" << endl;
-        cout << "Spiele pro Spieltag: " << anzahlSpiele << endl;
-        cout << "Anzahl Spielwochen:" << anzahlWochen << endl;
-        cout << "Spieltage: " << ( mittwoch 
-                                    ? ( samstag 
-                                            ? "Mittwoch & Samstag" 
-                                            : "Mittwoch" 
-                                    ) 
-                                    : "Samstag" 
-                                ) 
-                                << endl;
+        outputChosenOptions(anzahlSpiele, anzahlWochen, mittwoch, samstag);
 
-        double gesamtpreis = 0;
-        int spiele = anzahlSpiele * anzahlWochen;
-        if(mittwoch && samstag) {
-            spiele *= 2;
-        }
-        gesamtpreis = (spiele * 1.2);
-
-        if((mittwoch && samstag)) {
-            if(anzahlWochen > 2) {
-                gesamtpreis += 1;
-            } else {
-                gesamtpreis += 0.75;
-            }
-        }
-        else if(anzahlWochen > 1) {
-            gesamtpreis += 0.75;
-        } else {
-            gesamtpreis += 0.5;
-        }
-
-        cout << endl << "Gesamtpreis: " << gesamtpreis << endl;
+        calculateAndOutputPrice(anzahlSpiele, anzahlWochen, (mittwoch && samstag));
 
     } while(runAgain());
 
